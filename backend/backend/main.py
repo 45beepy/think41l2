@@ -50,6 +50,27 @@ async def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
     users = db.query(models.User).offset(skip).limit(limit).all()
     return users
 
+# --- NEW: Get all conversations for a user ---
+@app.get("/users/{user_id}/conversations", response_model=List[schemas.Conversation])
+async def get_user_conversations(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    
+    conversations = db.query(models.Conversation).filter(models.Conversation.user_id == user_id).order_by(models.Conversation.start_time.desc()).all()
+    return conversations
+
+# --- NEW: Get messages for a specific conversation ---
+@app.get("/conversations/{conversation_id}/messages", response_model=List[schemas.Message])
+async def get_conversation_messages(conversation_id: int, db: Session = Depends(get_db)):
+    conversation = db.query(models.Conversation).filter(models.Conversation.id == conversation_id).first()
+    if not conversation:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Conversation not found")
+    
+    messages = db.query(models.Message).filter(models.Message.conversation_id == conversation_id).order_by(models.Message.timestamp).all()
+    return messages
+
+
 def get_product_details(db: Session, product_name: str = None, product_id: int = None):
     query = db.query(models.Product)
     if product_id:

@@ -8,13 +8,100 @@ body {
   margin: 0;
 }
 
-.chat-container {
-  background-color: #fff;
+.app-container {
+  display: flex;
+  width: 90%;
+  max-width: 1200px; /* Increased max-width for better display of 80% chat area */
+  height: 90vh;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 20%; /* Adjusted to 20% */
+  min-width: 180px; /* Optional: ensure minimum width for readability */
+  background-color: #e9ecef;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.new-chat-button {
   width: 100%;
-  max-width: 500px;
-  height: 80vh; /* Adjust height as needed */
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.new-chat-button:hover {
+  background-color: #218838;
+}
+
+.conversation-list {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.conversation-list h3 {
+  color: #555;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+
+.conversation-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.conversation-item {
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-left 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.conversation-item:hover {
+  background-color: #e2e6ea;
+}
+
+.conversation-item.active {
+  background-color: #d1ecf1;
+  border-left-color: #007bff;
+  font-weight: bold;
+}
+
+.conversation-title {
+  font-size: 0.95em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-time {
+  font-size: 0.8em;
+  color: #6c757d;
+  text-align: right;
+  margin-top: 5px;
+}
+
+/* Existing chat container styles */
+.chat-container {
+  background-color: #fff;
+  flex-grow: 1; /* This makes it take remaining space */
+  width: 80%; /* Explicitly set to 80% for clarity, though flex-grow handles it */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -26,8 +113,15 @@ body {
   padding: 15px;
   text-align: center;
   font-size: 1.2em;
-  border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.conversation-status {
+  font-size: 0.8em;
+  opacity: 0.8;
 }
 
 .message-list {
@@ -47,13 +141,13 @@ body {
 }
 
 .message-item.user {
-  background-color: #e0f7fa; /* Light blue */
+  background-color: #e0f7fa;
   align-self: flex-end;
   border-bottom-right-radius: 2px;
 }
 
 .message-item.ai {
-  background-color: #f1f0f0; /* Light gray */
+  background-color: #f1f0f0;
   align-self: flex-start;
   border-bottom-left-radius: 2px;
 }
@@ -87,4 +181,11 @@ body {
 
 .chat-input-area button:hover {
   background-color: #0056b3;
+}
+
+.no-chats {
+    font-size: 0.9em;
+    color: #888;
+    text-align: center;
+    padding: 20px;
 }

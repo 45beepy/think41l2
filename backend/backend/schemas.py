@@ -58,6 +58,16 @@ class Conversation(ConversationBase):
     class Config:
         from_attributes = True
 
+# --- NEW: Schema for Conversation Summary (for the sidebar list) ---
+class ConversationSummary(BaseModel):
+    id: int
+    user_id: int
+    start_time: datetime
+    title: Optional[str] = None # Will try to set this from first message or LLM summary
+
+    class Config:
+        from_attributes = True
+
 class ChatRequest(BaseModel):
     user_id: int
     message: str
