@@ -67,6 +67,9 @@ First, clone the project repository to your local machine:
 ```bash
 git clone [https://github.com/your-username/think41l2.git](https://github.com/your-username/think41l2.git) # Replace with your actual repo URL
 cd think41l2
+```
+
+
 ## Deployment Guide
 
 This section outlines the general steps and considerations for deploying your Dockerized AI Conversational Agent to a cloud environment. The approach will vary slightly depending on your chosen cloud provider (e.g., AWS, Google Cloud, Azure, Heroku, Render, DigitalOcean).
