@@ -1,7 +1,9 @@
 # AI Conversational Agent
-[<img width="1357" height="937" alt="image" src="https://github.com/user-attachments/assets/ffcb6f66-56c2-4b38-b65d-63144f9d0b8b" />](https://youtu.be/z_BXsDOP-h0)
-Docker Image
-<img width="983" height="272" alt="image" src="https://github.com/user-attachments/assets/318cd09d-ddda-44d1-bd3e-755b75c3497d" />
+### Demo Video
+
+[![Watch the Demo Video](assets/demo-thumbnail.png)](https://youtu.be/z_BXsDOP-h0)
+
+Click the image above to watch a demo of the AI Conversational Agent.
 
 
 
