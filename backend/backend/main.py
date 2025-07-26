@@ -4,14 +4,15 @@ from datetime import datetime
 from typing import List, Optional
 import os
 from dotenv import load_dotenv
-import json # Import json module
+import json
 
 from . import models, schemas
 from .database import engine, get_db
 
 from groq import Groq
+from fastapi.middleware.cors import CORSMiddleware
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env'))
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
@@ -27,6 +28,19 @@ app = FastAPI(
     version="0.1.0",
 )
 
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the AI Conversational Agent API!"}
@@ -36,7 +50,6 @@ async def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
     users = db.query(models.User).offset(skip).limit(limit).all()
     return users
 
-# Helper functions to query e-commerce data (already present, adding here for completeness)
 def get_product_details(db: Session, product_name: str = None, product_id: int = None):
     query = db.query(models.Product)
     if product_id:
@@ -119,7 +132,6 @@ async def chat_endpoint(request: schemas.ChatRequest, db: Session = Depends(get_
         models.Message.conversation_id == conversation.id
     ).order_by(models.Message.timestamp).all()
 
-    # Build messages for LLM, including system instructions for intent/entity extraction
     messages_for_llm = [
         {"role": "system", "content": (
             "You are an e-commerce AI assistant named Bolt. Your primary goal is to help users find products and get order statuses. "
@@ -131,7 +143,7 @@ async def chat_endpoint(request: schemas.ChatRequest, db: Session = Depends(get_
             "5. Based on intent and extracted entities, use the provided tools (e.g., get_product_details, get_order_details) to fetch data. "
             "   If a tool returns 'None' or empty data, inform the user you couldn't find it.\n"
             "6. Formulate a helpful response to the user based on the retrieved data or clarifying questions.\n"
-            "7. **Crucially, if you need to call a tool, respond ONLY with a JSON object like this:**\n"
+            "7. Crucially, if you need to call a tool, respond ONLY with a JSON object like this:\n"
             "   ```json\n"
             "   {\n"
             "     \"tool_call\": {\n"
@@ -150,21 +162,19 @@ async def chat_endpoint(request: schemas.ChatRequest, db: Session = Depends(get_
             llm_role = "assistant"
         messages_for_llm.append({"role": llm_role, "content": msg.content})
 
-    # Add the current user message
     messages_for_llm.append({"role": "user", "content": user_message_content})
 
-    ai_response_content = "I'm sorry, I encountered an internal issue. Please try again later." # Default fallback
+    ai_response_content = "I'm sorry, I encountered an internal issue. Please try again later."
 
     try:
         chat_completion = groq_client.chat.completions.create(
             messages=messages_for_llm,
             model="llama3-8b-8192",
-            temperature=0.0, # Lower temperature for more consistent, structured responses
+            temperature=0.0,
             max_tokens=250,
         )
         llm_raw_response = chat_completion.choices[0].message.content
 
-        # Attempt to parse LLM's response for tool calls
         try:
             parsed_response = json.loads(llm_raw_response)
             if "tool_call" in parsed_response:
@@ -179,27 +189,22 @@ async def chat_endpoint(request: schemas.ChatRequest, db: Session = Depends(get_
                     tool_output = get_product_details(db, product_name=product_name, product_id=product_id)
                 elif function_name == "get_order_details":
                     order_id = parameters.get("order_id")
-                    # Always use the current user_id for order details for security
                     tool_output = get_order_details(db, order_id=order_id, user_id=user_id)
                 
-                # Add tool output to messages and call LLM again for final response
                 messages_for_llm.append({"role": "tool", "content": json.dumps(tool_output)})
                 
-                # Make a second LLM call with tool results to generate a human-friendly response
                 final_chat_completion = groq_client.chat.completions.create(
                     messages=messages_for_llm,
                     model="llama3-8b-8192",
-                    temperature=0.7, # Higher temperature for more natural language
+                    temperature=0.7,
                     max_tokens=250,
                 )
                 ai_response_content = final_chat_completion.choices[0].message.content
 
             else:
-                # If no tool_call detected, use the LLM's raw response directly
                 ai_response_content = llm_raw_response
 
         except json.JSONDecodeError:
-            # If LLM didn't return a valid JSON, treat it as a natural language response
             ai_response_content = llm_raw_response
             
     except Exception as e:
