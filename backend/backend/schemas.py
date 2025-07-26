@@ -57,3 +57,14 @@ class Conversation(ConversationBase):
 
     class Config:
         from_attributes = True
+
+class ChatRequest(BaseModel):
+    user_id: int
+    message: str
+    conversation_id: Optional[int] = None
+
+class ChatResponse(BaseModel):
+    conversation_id: int
+    user_message: str
+    ai_response: str
+    message_id: int
