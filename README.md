@@ -2,7 +2,7 @@
 # Demo Video
 
 
-[![Watch the Demo Video](<img width="1378" height="870" alt="thumbnail" src="https://github.com/user-attachments/assets/7b053337-4943-43d1-9f22-a6600d9a3283" />
+[![Watch the Demo Video](thumbnail.png)]
 )](https://youtu.be/z_BXsDOP-h0)
 
 Click the image above to watch a demo of the AI Conversational Agent.
