@@ -1,9 +1,7 @@
 # AI Conversational Agent
-# Demo Video
-
-
-[![Watch the Demo Video](thumbnail.png)]
-)](https://youtu.be/z_BXsDOP-h0)
+# Demo Video [2 Min]
+(https://youtu.be/z_BXsDOP-h0)
+<img width="1378" height="870" alt="thumbnail" src="https://github.com/user-attachments/assets/74c7884f-1781-4c9e-ba39-acfdec1db3b2" />
 
 Click the image above to watch a demo of the AI Conversational Agent.
 
