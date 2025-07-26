@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+mysql-connector-python
+SQLAlchemy[asyncio]
+python-dotenv # For managing environment variables (e.g., database credentials)
