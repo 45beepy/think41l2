@@ -1,4 +1,6 @@
 # AI Conversational Agent
+<img width="1408" height="956" alt="image" src="https://github.com/user-attachments/assets/0a50699b-479f-4a9b-b4ed-42200a092993" />
+
 
 ## Project Overview
 
