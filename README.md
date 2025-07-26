@@ -10,7 +10,7 @@ Click the image above to watch a demo of the AI Conversational Agent.
 
 ## Project Overview
 
-This project implements a full-stack AI conversational agent designed to assist users with e-commerce queries, specifically focusing on product information and order status. The solution is built with a Python FastAPI backend, a React frontend, and a MySQL database, all orchestrated using Docker Compose for easy setup and deployment. The backend integrates with the Groq API for large language model (LLM) capabilities, enabling intelligent and contextual responses. However i couldn't complete the last milestone that is creating Docker-compose.yaml. But i have completed previous 9 milestones and i have attached a video as a proof of completion. 
+This project implements a full-stack AI conversational agent designed to assist users with e-commerce queries, specifically focusing on product information and order status. The solution is built with a Python FastAPI backend, a React frontend, and a MySQL database, all orchestrated using Docker Compose for easy setup and deployment. The backend integrates with the Groq API for large language model (LLM) capabilities, enabling intelligent and contextual responses. However i **couldn't complete the last milestone that is creating Docker-compose.yaml**. But i have **completed previous 9 milestones** and i have attached a video as a proof of completion. 
 
 ## Features
 
