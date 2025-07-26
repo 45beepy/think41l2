@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7 # Changed to 5.7 as it's often lighter for initial Docker setup
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'pravin' # IMPORTANT: Replace with your actual strong password
+      MYSQL_DATABASE: ecommerce_db
+      # MYSQL_USER and MYSQL_PASSWORD are REMOVED when setting MYSQL_ROOT_PASSWORD
+    ports:
+      - "3306:3306" # Map host port 3306 to container port 3306
+    volumes:
+      - db_data:/var/lib/mysql # Persistent storage for MySQL data
+      # If you have an init.sql script for initial schema creation, uncomment the line below
+      # - ./backend/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app_network
+    healthcheck: # Health check to ensure DB is ready before backend starts
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      start_period: 30s # Give DB more time to initialize
+
+  backend:
+    build:
+      context: ./backend # Build context is the root/backend/ directory
+      dockerfile: Dockerfile # Looks for Dockerfile in ./backend/
+    container_name: ai_backend
+    environment:
+      # This pulls GROQ_API_KEY from the host's shell environment or a .env file next to docker-compose.yml
+      GROQ_API_KEY: ${GROQ_API_KEY}
+    ports:
+      - "8000:8000" # Map host port 8000 to container port 8000
+    depends_on:
+      db:
+        condition: service_healthy # Ensure DB is healthy before starting backend
+    networks:
+      - app_network
+    env_file: # Load .env variables from a file for the backend service.
+      - ./backend/backend/.env # Path to your backend .env file relative to docker-compose.yml
+    # Add commands to run load_data.py before starting FastAPI
+    command: >
+      sh -c "
+        python /app/data/load_data.py &&
+        cd backend/backend &&
+        uvicorn main:app --host 0.0.0.0 --port 8000
+      "
+
+  frontend:
+    build:
+      context: ./frontend # Build context is the root/frontend/ directory
+      dockerfile: Dockerfile # Looks for Dockerfile in ./frontend/
+    container_name: ai_frontend
+    ports:
+      - "3000:80" # Map host port 3000 to container port 80 (Nginx port)
+    depends_on:
+      backend:
+        condition: service_started # Frontend needs backend to be started
+    networks:
+      - app_network
+
+volumes:
+  db_data: # Define the named volume for persistent DB data
+
+networks:
+  app_network: # Define a custom network for inter-service communication
+    driver: bridge
