@@ -5,9 +5,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import QueuePool
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+load_dotenv() # Load from .env
 
-MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_HOST = os.getenv("MYSQL_HOST") # Will now load 'host.docker.internal'
 MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
 MYSQL_USER = os.getenv("MYSQL_USER")
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
