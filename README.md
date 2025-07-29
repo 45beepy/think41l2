@@ -73,7 +73,7 @@ Follow these steps to get the application running on your local machine.
 First, clone the project repository to your local machine:
 
 ```bash
-git clone [https://github.com/your-username/think41l2.git](https://github.com/your-username/think41l2.git) # Replace with your actual repo URL
+git clone [https://github.com/45beepy/think41l2.git](https://github.com/your-username/think41l2.git) # Replace with your actual repo URL
 cd think41l2
 ```
 
